@@ -5,42 +5,41 @@ const router = vertex.router()
 
 /*  This is a sample API route. */
 
+const validResources = ["message"]
+
 router.get('/:resource', function(req, res){
 	const { resource } = req.params
+    const { query } = req
 	// res.json({
 	// 	confirmation: 'success',
 	// 	resource: req.params.resource,
 	// 	query: req.query // from the url query string
 	// })
-    const messages = [
-        {
-            toUser: '5b29acbc368b4a001414daa5',
-            fromUser: "Dan",
-            message: "Turbo is Awesome",
-            dateTime: new Date()
-        },
-        {
-            toUser: '5b29acbc368b4a001414daa5',
-            fromUser: "Dan",
-            message: "Don't you agree",
-            dateTime: new Date()
-        },
-        {   
-            toUser: "Ryan",
-            fromUser: "Forrest",
-            message: "Turbo is Awesome",
-            dateTime: new Date()
-        }
+    if(validResources.indexOf(resource)<0){
+      res.json({
+        confirmation: 'fail',
+        message: 'no such resource'
+      })
+      return
+    }
 
-    ]
-    messages.forEach((message, i)=>{
-        turbo.create('message', message)
 
+    turbo.fetch(resource, query).then((data) => {
+      res.json({
+        confirmation: "success",
+        data: data
+      })
+      return
+    }).catch((err) => {
+      console.log(err)
+      res.json({
+        confirmation: 'fail',
+        message: err.message
+      })
+      return
     })
-    // res.json({
-    // 	confirmation: "success",
-    // 	data: message
-    // })
+    
+    
 })
 
 router.get('/:resource/:id', function(req, res){
