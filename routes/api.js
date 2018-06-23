@@ -58,11 +58,13 @@ router.get('/message/me', function(req, res){
     // }
   const messages = []
   const first = {
-      toUser: query.toUser
+      toUser: query.toUser,
+      fromUser: query.fromUser
   }
 
   const second = {
-      fromUser: query.fromUser
+      fromUser: query.toUser,
+      toUser: query.fromUser
   }
 
   turbo
