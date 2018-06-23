@@ -38,18 +38,69 @@ router.get('/:resource', function(req, res){
       })
       return
     })
-    
-    
 })
 
-router.get('/:resource/:id', function(req, res){
-	res.json({
-		confirmation: 'success',
-		resource: req.params.resource,
-		id: req.params.id,
-		query: req.query // from the url query string
-	})
+router.get('/message/me', function(req, res){
+  // const { resource } = req.params
+  const resource = 'message'
+  const { query } = req
+  // res.json({
+  //  confirmation: 'success',
+  //  resource: req.params.resource,
+  //  query: req.query // from the url query string
+  // })
+    // if(validResources.indexOf(resource)<0){
+    //   res.json({
+    //     confirmation: 'fail',
+    //     message: 'no such resource'
+    //   })
+    //   return
+    // }
+  const messages = []
+  const first = {
+      toUser: query.toUser
+  }
+
+  const second = {
+      fromUser: query.fromUser
+  }
+
+  turbo
+      .fetch(resource, first)
+      .then((data) => {
+        data.forEach((mes, i)=>{
+          messages.push(mes)
+        })
+        return turbo.fetch(resource, second)
+      })
+      .then((data, i)=>{
+        data.forEach((mes, i)=>{
+          messages.push(mes)
+        })
+        res.json({
+          confirmation: "success",
+          data: messages
+        })
+      })
+      .catch((err) => {
+      console.log(err)
+      res.json({
+        confirmation: 'fail',
+        message: err.message
+      })
+      return
+    })    
 })
+
+
+// router.get('/:resource/:id', function(req, res){
+// 	res.json({
+// 		confirmation: 'success',
+// 		resource: req.params.resource,
+// 		id: req.params.id,
+// 		query: req.query // from the url query string
+// 	})
+// })
 
 
 
