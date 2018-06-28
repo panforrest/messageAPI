@@ -7,6 +7,10 @@ const router = vertex.router()
 
 const validResources = ["message"]
 
+router.post("/message", function(req, res){
+  console.log(req.body)
+})
+
 router.get('/:resource', function(req, res){
 	const { resource } = req.params
     const { query } = req
