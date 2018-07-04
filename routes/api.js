@@ -58,8 +58,12 @@ router.get('/:resource', function(req, res){
       return
     }
 
+    delete query.page
 
-    turbo.fetch(resource, query).then((data) => {
+    turbo
+    .fetch(resource, query)
+    .then((data) => {
+      console.log(data.length)
       res.json({
         confirmation: "success",
         data: data
