@@ -8,7 +8,30 @@ const router = vertex.router()
 const validResources = ["message"]
 
 router.post("/message", function(req, res){
-  console.log(req.body)
+  // console.log(req.body)
+  const toUser = req.body.toUser.toLowerCase()
+  let userId = null
+  console.log(toUser)
+  turbo.fetch("user", { username: toUser }).then(data => {
+    console.log(data[0].id)
+  }) 
+
+  turbo.create('message', req.body)
+  .then((data) => {
+    res.json({
+      confirmation: "success",
+      data: data
+    })
+    return
+  })
+  .catch((err) => {
+    console.log(err)
+    res.json({
+      confirmation: 'fail',
+      message: 'no such resource'
+    })
+    return
+  })  
 })
 
 router.get('/:resource', function(req, res){
