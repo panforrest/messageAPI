@@ -60,7 +60,8 @@ router.get("/:resource", function(req, res){
       return
     }
 
-    const { page } = query
+    // const { page } = query
+    const page = 5
     delete query.page
 
     turbo
@@ -78,7 +79,7 @@ router.get("/:resource", function(req, res){
       console.log(pageResults.length)
       res.json({
         confirmation: "success",
-        data: data
+        data: pageResults
       })
       return
     })
