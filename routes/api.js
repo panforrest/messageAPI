@@ -7,6 +7,8 @@ const router = vertex.router()
 
 const validResources = ["message"]
 
+const PAGE_LENGTH = 10
+
 router.post("/message", function(req, res){
   // console.log(req.body)
   const toUser = req.body.toUser.toLowerCase()
@@ -42,9 +44,9 @@ router.post("/message", function(req, res){
     })  
 })
 
-router.get('/:resource', function(req, res){
+router.get("/:resource", function(req, res){
 	const { resource } = req.params
-    const { query } = req
+  let { query } = req
 	// res.json({
 	// 	confirmation: 'success',
 	// 	resource: req.params.resource,
@@ -58,18 +60,29 @@ router.get('/:resource', function(req, res){
       return
     }
 
+    const { page } = query
     delete query.page
 
     turbo
     .fetch(resource, query)
-    .then((data) => {
+    .then(data => {
       console.log(data.length)
+      // console.log(PAGE_LENGTH)
+      // console.log(page)
+      console.log(PAGE_LENGTH * page)
+
+      const pageResults = data.slice(
+        PAGE_LENGTH * page - PAGE_LENGTH, 
+        PAGE_LENGTH * page
+      )
+      console.log(pageResults.length)
       res.json({
         confirmation: "success",
         data: data
       })
       return
-    }).catch((err) => {
+    })
+    .catch((err) => {
       console.log(err)
       res.json({
         confirmation: 'fail',
